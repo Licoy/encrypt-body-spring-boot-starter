@@ -23,6 +23,28 @@
         <springboot-version>1.5.12.RELEASE</springboot-version>
     </properties>
 
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://www.licoy.cn</url>
+        <connection>git@github.com:Licoy/encrypt-body-spring-boot-starter.git</connection>
+        <developerConnection>https://github.com/Licoy/encrypt-body-spring-boot-starter.git</developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Licoy</name>
+            <email>licoycn@foxmail.com</email>
+            <organization>https://www.licoy.cn</organization>
+        </developer>
+    </developers>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
