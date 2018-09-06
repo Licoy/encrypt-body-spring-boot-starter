@@ -2,6 +2,7 @@ package cn.licoy.encryptbody.annotation;
 
 
 import cn.licoy.encryptbody.enums.EncryptBodyMethod;
+import cn.licoy.encryptbody.enums.SHAEncryptType;
 
 import java.lang.annotation.*;
 
@@ -15,6 +16,10 @@ import java.lang.annotation.*;
 @Documented
 public @interface EncryptBody {
 
-    EncryptBodyMethod value() default EncryptBodyMethod.AES;
+    EncryptBodyMethod value() default EncryptBodyMethod.MD5;
+
+    String otherKey() default "";
+
+    SHAEncryptType shaType() default SHAEncryptType.SHA256;
 
 }

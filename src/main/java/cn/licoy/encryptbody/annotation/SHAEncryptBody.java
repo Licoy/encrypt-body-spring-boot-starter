@@ -1,5 +1,7 @@
 package cn.licoy.encryptbody.annotation;
 
+import cn.licoy.encryptbody.enums.SHAEncryptType;
+
 import java.lang.annotation.*;
 
 /**
@@ -11,4 +13,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface SHAEncryptBody {
+
+    SHAEncryptType value() default SHAEncryptType.SHA256;
+
 }
