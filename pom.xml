@@ -8,7 +8,7 @@
     <artifactId>encrypt-body-spring-boot-starter</artifactId>
     <version>0.1</version>
 
-    <name>spring-encrypt-body</name>
+    <name>encrypt-body-spring-boot-starter</name>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
