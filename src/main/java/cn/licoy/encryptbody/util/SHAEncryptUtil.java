@@ -9,9 +9,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
+ * <p>SHA加密工具类</p>
  * @author licoy.cn
  * @version 2018/9/5
- * SHA加密
  */
 public class SHAEncryptUtil {
 

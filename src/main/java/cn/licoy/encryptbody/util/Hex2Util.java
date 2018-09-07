@@ -1,9 +1,9 @@
 package cn.licoy.encryptbody.util;
 
 /**
+ * <p>二进制转换工具类</p>
  * @author licoy.cn
  * @version 2018/9/5
- * 二进制转换工具类
  */
 public class Hex2Util {
 

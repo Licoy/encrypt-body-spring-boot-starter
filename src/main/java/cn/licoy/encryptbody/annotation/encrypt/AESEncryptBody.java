@@ -1,6 +1,4 @@
-package cn.licoy.encryptbody.annotation;
-
-import cn.licoy.encryptbody.enums.SHAEncryptType;
+package cn.licoy.encryptbody.annotation.encrypt;
 
 import java.lang.annotation.*;
 
@@ -12,8 +10,8 @@ import java.lang.annotation.*;
 @Target(value = {ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface SHAEncryptBody {
+public @interface AESEncryptBody {
 
-    SHAEncryptType value() default SHAEncryptType.SHA256;
+    String otherKey() default "";
 
 }

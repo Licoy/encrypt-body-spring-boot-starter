@@ -3,9 +3,9 @@ package cn.licoy.encryptbody.enums;
 import lombok.AllArgsConstructor;
 
 /**
+ * <p>SHA加密类型</p>
  * @author licoy.cn
  * @version 2018/9/6
- * SHA加密类型
  */
 @AllArgsConstructor
 public enum  SHAEncryptType {

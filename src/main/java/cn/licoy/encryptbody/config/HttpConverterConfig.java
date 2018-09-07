@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * <p>响应体数据处理，防止数据类型为String时再进行JSON数据转换，那么产生最终的结果可能被双引号包含...</p>
  * @author licoy.cn
  * @version 2018/9/5
  */

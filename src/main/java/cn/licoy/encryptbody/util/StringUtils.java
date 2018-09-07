@@ -1,6 +1,7 @@
 package cn.licoy.encryptbody.util;
 
 /**
+ * <p>字符串处理工具类</p>
  * @author licoy.cn
  * @version 2018/9/6
  */

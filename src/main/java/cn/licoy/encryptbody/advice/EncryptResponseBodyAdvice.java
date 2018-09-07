@@ -1,6 +1,6 @@
 package cn.licoy.encryptbody.advice;
 
-import cn.licoy.encryptbody.annotation.*;
+import cn.licoy.encryptbody.annotation.encrypt.*;
 import cn.licoy.encryptbody.bean.EncryptAnnotationInfoBean;
 import cn.licoy.encryptbody.enums.EncryptBodyMethod;
 import cn.licoy.encryptbody.enums.SHAEncryptType;
@@ -25,21 +25,25 @@ import java.lang.annotation.Annotation;
 
 
 /**
+ * 响应数据的加密处理<br>
+ *     本类只对控制器参数中含有<strong>{@link org.springframework.web.bind.annotation.ResponseBody}</strong>
+ *     或者控制类上含有<strong>{@link org.springframework.web.bind.annotation.RestController}</strong>
+ *     以及package为<strong><code>cn.licoy.encryptbody.annotation.encrypt</code></strong>下的注解有效
+ * @see ResponseBodyAdvice
  * @author licoy.cn
  * @version 2018/9/4
- * ResponseBodyAdvice实现类
  */
 @Order(1)
 @ControllerAdvice
 @Slf4j
-public class EncryptBodyAdvice implements ResponseBodyAdvice {
+public class EncryptResponseBodyAdvice implements ResponseBodyAdvice {
 
     private final ObjectMapper objectMapper;
 
     private final EncryptBodyConfig config;
 
     @Autowired
-    public EncryptBodyAdvice(ObjectMapper objectMapper,EncryptBodyConfig config) {
+    public EncryptResponseBodyAdvice(ObjectMapper objectMapper, EncryptBodyConfig config) {
         this.objectMapper = objectMapper;
         this.config = config;
     }

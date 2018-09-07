@@ -6,9 +6,9 @@ import javax.crypto.spec.DESKeySpec;
 import java.security.SecureRandom;
 
 /**
+ * <p>DES加密处理工具类</p>
  * @author licoy.cn
  * @version 2018/9/5
- * DES加密
  */
 public class DESEncryptUtil {
 

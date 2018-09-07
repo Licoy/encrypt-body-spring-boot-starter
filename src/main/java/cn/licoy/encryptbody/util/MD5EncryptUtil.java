@@ -3,9 +3,9 @@ package cn.licoy.encryptbody.util;
 import java.security.MessageDigest;
 
 /**
+ * <p>MD5加密工具类</p>
  * @author licoy.cn
  * @version 2017/11/18
- * MD5加密
  */
 public class MD5EncryptUtil {
 

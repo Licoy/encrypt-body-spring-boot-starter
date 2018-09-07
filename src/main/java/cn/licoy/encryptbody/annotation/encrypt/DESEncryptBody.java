@@ -1,4 +1,4 @@
-package cn.licoy.encryptbody.annotation;
+package cn.licoy.encryptbody.annotation.encrypt;
 
 import java.lang.annotation.*;
 
@@ -10,5 +10,8 @@ import java.lang.annotation.*;
 @Target(value = {ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface RSAEncryptBody {
+public @interface DESEncryptBody {
+
+    String otherKey() default "";
+
 }

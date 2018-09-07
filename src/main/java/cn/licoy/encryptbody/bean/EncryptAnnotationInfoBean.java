@@ -8,9 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * <p>加密注解信息</p>
  * @author licoy.cn
  * @version 2018/9/6
- * 加密注解信息
  */
 @Data
 @NoArgsConstructor

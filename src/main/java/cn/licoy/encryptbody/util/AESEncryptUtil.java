@@ -7,9 +7,9 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
 
 /**
+ * <p>AES加密处理工具类</p>
  * @author licoy.cn
  * @version 2018/9/5
- * AES加密
  */
 public class AESEncryptUtil {
 
