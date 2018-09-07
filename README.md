@@ -69,5 +69,11 @@ public class TestController {
 
 }
 ```
+## 讨论
+- QQ群：30261540  &nbsp; [点我加入QQ群讨论](https://shang.qq.com/wpa/qunwpa?idkey=c3541f1d0dbe443456228e3aebf23f6795b614a94d5df6a32f0b2b1c759bb99b)
+
+- 作者博客：[https://www.licoy.cn](https://www.licoy.cn)
+
+![讨论](./dist/discuss.png)
 ## 开源协议
 [Apache 2.0](/LICENSE)
