@@ -1,20 +1,23 @@
 ## 介绍
-`encrypt-body-spring-boot-starter`是可以对SpringBoot的ResponseBody响应体进行加密的一款工具包，支持暂支持MD5/SHA/AES/DES
-## 加密支持
-可进行加密方式有：
-    
-- MD5 
-- SHA-224 / 256 / 384 / 512
-- AES
-- DES
-- RSA(暂不支持)
+`encrypt-body-spring-boot-starter`是对SpringBoot控制器统一的响应体加密与请求体解密的注解处理方式，支持MD5/SHA/AES/DES/RSA。
+## 加密解密支持
+- 可进行加密的方式有：
+    - MD5
+    - SHA-224 / 256 / 384 / 512
+    - AES
+    - DES
+    - RSA (TODO)
+- 可进行解密的方式有：
+    - AES (TODO)
+    - DES (TODO)
+    - RSA (TODO)
 ## 使用方法
 - 在`pom.xml`中引入依赖：
 ```xml
 <dependency>
-	<groupId>cn.licoy</groupId>
-	<artifactId>encrypt-body-spring-boot-starter</artifactId>
-	<version>0.1</version>
+    <groupId>cn.licoy</groupId>
+    <artifactId>encrypt-body-spring-boot-starter</artifactId>
+    <version>0.1</version>
 </dependency>
 ```
 - 在工程对应的`Application`类中增加@EnableEncryptBody注解，例如：
@@ -44,7 +47,22 @@ encrypt:
 public class TestController {
 
     @GetMapping
+    @ResponseBody
     @EncryptBody(value = EncryptBodyMethod.AES)
+    public String test(){
+        return "hello world";
+    }
+
+}
+```
+或者使用`@RestController`对整个控制器的方法响应体都进行加密：
+```java
+@RestController
+@RequestMapping("/test")
+public class TestController {
+
+    @GetMapping
+    @EncryptBody
     public String test(){
         return "hello world";
     }
