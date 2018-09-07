@@ -2,15 +2,15 @@
 `encrypt-body-spring-boot-starter`是对SpringBoot控制器统一的响应体加密与请求体解密的注解处理方式，支持MD5/SHA/AES/DES/RSA。
 ## 加密解密支持
 - 可进行加密的方式有：
-    - MD5
-    - SHA-224 / 256 / 384 / 512
-    - AES
-    - DES
-    - RSA (TODO)
+    - - [x] MD5
+    - - [x] SHA-224 / 256 / 384 / 512
+    - - [x] AES
+    - - [x] DES
+    - - [ ] RSA
 - 可进行解密的方式有：
-    - AES (TODO)
-    - DES (TODO)
-    - RSA (TODO)
+    - - [ ] AES
+    - - [ ] DES
+    - - [ ] RSA
 ## 使用方法
 - 在`pom.xml`中引入依赖：
 ```xml
