@@ -25,6 +25,8 @@ public class EncryptBodyConfig {
 
     private String desKey;
 
+    private String encoding = "UTF-8";
+
 
 
 }

@@ -8,7 +8,7 @@ package cn.licoy.encryptbody.exception;
 public class EncryptMethodNotFoundException extends RuntimeException {
 
     public EncryptMethodNotFoundException() {
-        super("encrypt method not found!");
+        super("Encryption method is not defined. (加密方式未定义)");
     }
 
     public EncryptMethodNotFoundException(String message) {

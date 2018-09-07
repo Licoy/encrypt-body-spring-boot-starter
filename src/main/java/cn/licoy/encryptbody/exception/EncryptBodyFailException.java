@@ -8,7 +8,7 @@ package cn.licoy.encryptbody.exception;
 public class EncryptBodyFailException  extends RuntimeException {
 
     public EncryptBodyFailException() {
-        super("encrypt body fail!");
+        super("Encrypted data failed. (加密数据失败)");
     }
 
     public EncryptBodyFailException(String message) {

@@ -6,7 +6,6 @@ import cn.licoy.encryptbody.enums.EncryptBodyMethod;
 import cn.licoy.encryptbody.enums.SHAEncryptType;
 import cn.licoy.encryptbody.exception.EncryptBodyFailException;
 import cn.licoy.encryptbody.exception.EncryptMethodNotFoundException;
-import cn.licoy.encryptbody.exception.KeyNotConfiguredException;
 import cn.licoy.encryptbody.util.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -201,19 +200,11 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice {
         }
         String key = infoBean.getKey();
         if(method == EncryptBodyMethod.DES){
-            if(StringUtils.isNullOrEmpty(config.getDesKey()) && StringUtils.isNullOrEmpty(key)){
-                log.error("未配置des-key / Des-key not configured");
-                throw new KeyNotConfiguredException("未配置des-key / Des-key not configured");
-            }
-            if(key==null) key=config.getDesKey();
+            key = CheckUtils.checkAndGetKey(config.getAesKey(),key,"DES-KEY");
             return DESEncryptUtil.encrypt(formatStringBody,key);
         }
         if(method == EncryptBodyMethod.AES){
-            if(StringUtils.isNullOrEmpty(config.getAesKey()) && StringUtils.isNullOrEmpty(key)){
-                log.error("未配置aes-key / AES-key not configured");
-                throw new KeyNotConfiguredException("未配置aes-key / AES-key not configured");
-            }
-            if(key==null) key=config.getAesKey();
+            key = CheckUtils.checkAndGetKey(config.getAesKey(),key,"AES-KEY");
             return AESEncryptUtil.encrypt(formatStringBody,key);
         }
         throw new EncryptBodyFailException();
