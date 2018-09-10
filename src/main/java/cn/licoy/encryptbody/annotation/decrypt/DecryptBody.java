@@ -19,6 +19,4 @@ public @interface DecryptBody {
 
     String otherKey() default "";
 
-    SHAEncryptType shaType() default SHAEncryptType.SHA256;
-
 }
