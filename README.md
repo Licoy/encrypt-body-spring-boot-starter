@@ -1,10 +1,10 @@
 ## 介绍
 `encrypt-body-spring-boot-starter`是对SpringBoot控制器统一的响应体加密与请求体解密的注解处理方式，支持MD5/SHA/AES/DES/RSA。
- 
- ![release](https://img.shields.io/github/release/Licoy/encrypt-body-spring-boot-starter.svg)
- ![release](https://img.shields.io/github/issues/Licoy/encrypt-body-spring-boot-starter.svg)
- ![release](https://img.shields.io/github/issues-pr/Licoy/encrypt-body-spring-boot-starter.svg)
- ![author](https://img.shields.io/badge/author-Licoy-ff69b4.svg)
+
+ [![](https://img.shields.io/github/release/Licoy/encrypt-body-spring-boot-starter.svg)](./releases)
+ [![](https://img.shields.io/github/issues/Licoy/encrypt-body-spring-boot-starter.svg)](./issues)
+ [![](https://img.shields.io/github/issues-pr/Licoy/encrypt-body-spring-boot-starter.svg)](./pulls)
+ [![](https://img.shields.io/badge/author-Licoy-ff69b4.svg)](/Licoy)
 ## 加密解密支持
 - 可进行加密的方式有：
     - - [x] MD5
