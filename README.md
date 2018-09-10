@@ -37,8 +37,8 @@ public class Application {
 ```yaml
 encrypt:  
     body:
-      aes-key: 123456 #AES加密秘钥
-      des-key: 123456 #DES加密秘钥
+      aes-key: 12345678 #AES加密秘钥
+      des-key: 12345678 #DES加密秘钥
 ```
 - 对控制器响应体进行加密
 ```java
