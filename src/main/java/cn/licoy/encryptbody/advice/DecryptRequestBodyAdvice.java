@@ -122,6 +122,13 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
      * @return 加密注解信息
      */
     private DecryptAnnotationInfoBean getMethodAnnotation(MethodParameter methodParameter){
+        if(methodParameter.getMethod().isAnnotationPresent(DecryptBody.class)){
+            DecryptBody decryptBody = methodParameter.getMethodAnnotation(DecryptBody.class);
+            return DecryptAnnotationInfoBean.builder()
+                    .decryptBodyMethod(decryptBody.value())
+                    .key(decryptBody.otherKey())
+                    .build();
+        }
         if(methodParameter.getMethod().isAnnotationPresent(DESDecryptBody.class)){
             return DecryptAnnotationInfoBean.builder()
                     .decryptBodyMethod(DecryptBodyMethod.DES)
@@ -146,6 +153,13 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
         Annotation[] annotations = clazz.getDeclaredAnnotations();
         if(annotations!=null && annotations.length>0){
             for (Annotation annotation : annotations) {
+                if(annotation instanceof DecryptBody){
+                    DecryptBody decryptBody = (DecryptBody) annotation;
+                    return DecryptAnnotationInfoBean.builder()
+                            .decryptBodyMethod(decryptBody.value())
+                            .key(decryptBody.otherKey())
+                            .build();
+                }
                 if(annotation instanceof DESDecryptBody){
                     return DecryptAnnotationInfoBean.builder()
                             .decryptBodyMethod(DecryptBodyMethod.DES)

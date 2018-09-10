@@ -23,6 +23,4 @@ public class DecryptAnnotationInfoBean {
 
     private String key;
 
-    private SHAEncryptType shaEncryptType;
-
 }
