@@ -1,24 +1,25 @@
-简体中文 | [English](./README_EN.md)
-## 介绍
-`encrypt-body-spring-boot-starter`是对SpringBoot控制器统一的响应体加密与请求体解密的注解处理方式，支持MD5/SHA/AES/DES/RSA。
+[简体中文](./README.md) | English
+> This English document is translated by Google Translate. If you are willing to assist us with the documentation, please submit the relevant Pull Request.
+## Introduction
+`encrypt-body-spring-boot-starter` it is a unified processing method for response body encryption and request body decryption of SpringBoot controller, and supports MD5/SHA/AES/DES/RSA.
 
  [![](https://img.shields.io/github/release/Licoy/encrypt-body-spring-boot-starter.svg)]()
  [![](https://img.shields.io/github/issues/Licoy/encrypt-body-spring-boot-starter.svg)]()
  [![](https://img.shields.io/github/issues-pr/Licoy/encrypt-body-spring-boot-starter.svg)]()
  [![](https://img.shields.io/badge/author-Licoy-ff69b4.svg)]()
-## 加密解密支持
-- 可进行加密的方式有：
+## Encryption and decryption support
+- There are ways to encrypt：
     - - [x] MD5
     - - [x] SHA-224 / 256 / 384 / 512
     - - [x] AES
     - - [x] DES
     - - [ ] RSA
-- 可进行解密的方式有：
+- There are ways to decrypt：
     - - [x] AES
     - - [x] DES
     - - [ ] RSA
-## 使用方法
-- 在`pom.xml`中引入依赖：
+## Usage method
+- Introducing dependencies in `pom.xml`：
 ```xml
 <dependency>
     <groupId>cn.licoy</groupId>
@@ -26,7 +27,7 @@
     <version>0.1</version>
 </dependency>
 ```
-- 在工程对应的`Application`类中增加@EnableEncryptBody注解，例如：
+- Add the @EnableEncryptBody annotation to the `Application` class corresponding to the project, for example:
 ```java
 @EnableEncryptBody
 @SpringBootApplication
@@ -38,15 +39,15 @@ public class Application {
 
 }
 ```
-- 参数配置
-在项目的`application.yml`或`application.properties`文件中进行参数配置，例如：
+- Parameter configuration
+Configure the parameters in the project's `application.yml` or `application.properties` file, for example:
 ```yaml
 encrypt:  
     body:
-      aes-key: 12345678 #AES加密秘钥
-      des-key: 12345678 #DES加密秘钥
+      aes-key: 12345678 #AES encryption key
+      des-key: 12345678 #DES encryption key
 ```
-- 对控制器响应体进行加密
+- Encrypt the controller response body
 ```java
 @Controller
 @RequestMapping("/test")
@@ -61,7 +62,7 @@ public class TestController {
 
 }
 ```
-或者使用`@RestController`对整个控制器的方法响应体都进行加密：
+Or use `@RestController` to encrypt the method response body of the entire controller:
 ```java
 @RestController
 @EncryptBody
@@ -75,11 +76,8 @@ public class TestController {
 
 }
 ```
-## 讨论
-- QQ群：30261540  &nbsp; [点我加入QQ群讨论](https://shang.qq.com/wpa/qunwpa?idkey=c3541f1d0dbe443456228e3aebf23f6795b614a94d5df6a32f0b2b1c759bb99b)
+## Discuss
 
-- 作者博客：[https://www.licoy.cn](https://www.licoy.cn)
-
-![讨论](./dist/discuss.png)
-## 开源协议
+- Author blog：[https://www.licoy.cn](https://www.licoy.cn)
+## Open source agreement
 [Apache 2.0](/LICENSE)
