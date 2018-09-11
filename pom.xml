@@ -6,7 +6,7 @@
 
     <groupId>cn.licoy</groupId>
     <artifactId>encrypt-body-spring-boot-starter</artifactId>
-    <version>1.0.0.RELEASE</version>
+    <version>1.0.1.RELEASE</version>
 
     <name>encrypt-body-spring-boot-starter</name>
     <description>encrypt-body-spring-boot-starter是SpringBoot控制器统一的响应体加密与请求体解密的注解处理方式，支持MD5/SHA/AES/DES/RSA</description>
@@ -202,6 +202,36 @@
                                 <goals>deploy</goals>
                             </configuration>
                         </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-gpg-plugin</artifactId>
+                            <version>1.5</version>
+                            <executions>
+                                <execution>
+                                    <id>sign-artifacts</id>
+                                    <phase>verify</phase>
+                                    <goals>
+                                        <goal>sign</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <version>2.9.1</version>
+                            <configuration>
+                                <additionalparam>-Xdoclint:none</additionalparam>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>attach-javadocs</id>
+                                    <goals>
+                                        <goal>jar</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
                     </plugins>
                 </pluginManagement>
             </build>
@@ -219,5 +249,18 @@
             </distributionManagement>
         </profile>
     </profiles>
+
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <name>snapshots repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>

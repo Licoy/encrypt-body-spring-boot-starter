@@ -23,7 +23,7 @@
 <dependency>
     <groupId>cn.licoy</groupId>
     <artifactId>encrypt-body-spring-boot-starter</artifactId>
-    <version>0.1</version>
+    <version>1.0.1.RELEASE</version>
 </dependency>
 ```
 - 在工程对应的`Application`类中增加@EnableEncryptBody注解，例如：
@@ -75,6 +75,9 @@ public class TestController {
 
 }
 ```
+## 注解一览表
+- [加密注解一览表](https://github.com/Licoy/encrypt-body-spring-boot-starter/wiki/加密注解一览表)
+- [解密注解一览表](https://github.com/Licoy/encrypt-body-spring-boot-starter/wiki/解密注解一览表)
 ## 讨论
 - QQ群：30261540  &nbsp; [点我加入QQ群讨论](https://shang.qq.com/wpa/qunwpa?idkey=c3541f1d0dbe443456228e3aebf23f6795b614a94d5df6a32f0b2b1c759bb99b)
 

@@ -24,7 +24,7 @@
 <dependency>
     <groupId>cn.licoy</groupId>
     <artifactId>encrypt-body-spring-boot-starter</artifactId>
-    <version>0.1</version>
+    <version>1.0.1.RELEASE</version>
 </dependency>
 ```
 - Add the @EnableEncryptBody annotation to the `Application` class corresponding to the project, for example:
@@ -76,6 +76,9 @@ public class TestController {
 
 }
 ```
+## Annotated list
+- [Encrypted annotation list](https://github.com/Licoy/encrypt-body-spring-boot-starter/wiki/加密注解一览表)
+- [Decryption annotation list](https://github.com/Licoy/encrypt-body-spring-boot-starter/wiki/解密注解一览表)
 ## Discuss
 
 - Author blog：[https://www.licoy.cn](https://www.licoy.cn)
