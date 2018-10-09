@@ -23,7 +23,7 @@
 <dependency>
     <groupId>cn.licoy</groupId>
     <artifactId>encrypt-body-spring-boot-starter</artifactId>
-    <version>1.0.1.RELEASE</version>
+    <version>1.0.2.RELEASE</version>
 </dependency>
 ```
 - 在工程对应的`Application`类中增加@EnableEncryptBody注解，例如：
