@@ -41,7 +41,9 @@ public class AESEncryptUtil {
     private static String aes(String content, String password, int type) {
         try {
             KeyGenerator generator = KeyGenerator.getInstance("AES");
-            generator.init(128, new SecureRandom(password.getBytes()));
+            SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+            random.setSeed(password.getBytes());
+            generator.init(128, random);
             SecretKey secretKey = generator.generateKey();
             byte[] enCodeFormat = secretKey.getEncoded();
             SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");
