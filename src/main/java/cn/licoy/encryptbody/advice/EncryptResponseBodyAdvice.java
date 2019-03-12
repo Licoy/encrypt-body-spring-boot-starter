@@ -200,7 +200,7 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice {
         }
         String key = infoBean.getKey();
         if(method == EncryptBodyMethod.DES){
-            key = CheckUtils.checkAndGetKey(config.getAesKey(),key,"DES-KEY");
+            key = CheckUtils.checkAndGetKey(config.getDesKey(),key,"DES-KEY");
             return DESEncryptUtil.encrypt(formatStringBody,key);
         }
         if(method == EncryptBodyMethod.AES){
