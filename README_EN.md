@@ -24,7 +24,7 @@
 <dependency>
     <groupId>cn.licoy</groupId>
     <artifactId>encrypt-body-spring-boot-starter</artifactId>
-    <version>1.0.2.RELEASE</version>
+    <version>1.0.3.RELEASE</version>
 </dependency>
 ```
 - Add the @EnableEncryptBody annotation to the `Application` class corresponding to the project, for example:
