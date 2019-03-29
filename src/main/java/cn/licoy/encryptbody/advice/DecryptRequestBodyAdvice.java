@@ -189,7 +189,7 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
         if(method==null) throw new DecryptMethodNotFoundException();
         String key = infoBean.getKey();
         if(method == DecryptBodyMethod.DES){
-            key = CheckUtils.checkAndGetKey(config.getAesKey(),key,"DES-KEY");
+            key = CheckUtils.checkAndGetKey(config.getDesKey(),key,"DES-KEY");
             return DESEncryptUtil.decrypt(formatStringBody,key);
         }
         if(method == DecryptBodyMethod.AES){
