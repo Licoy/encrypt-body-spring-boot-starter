@@ -86,3 +86,5 @@ public class TestController {
 ![讨论](./dist/discuss.png)
 ## 开源协议
 [Apache 2.0](/LICENSE)
+## 推荐
+[![华为云](./dist/hwy-student.jpg)](https://www.licoy.cn/go/ad/?t=huaweiyun__hongkong_and_xueshengji_190801)
