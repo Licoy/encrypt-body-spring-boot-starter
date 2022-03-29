@@ -10,7 +10,7 @@
 ## Encryption and decryption support
 - There are ways to encrypt：
     - - [x] MD5
-    - - [x] SHA-224 / 256 / 384 / 512
+    - - [x] SHA-1 / SHA-256
     - - [x] AES
     - - [x] DES
     - - [x] RSA
