@@ -126,7 +126,7 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
         if (method.isAnnotationPresent(DESDecryptBody.class)) {
             DESDecryptBody decryptBody = methodParameter.getMethodAnnotation(DESDecryptBody.class);
             if (decryptBody != null) {
-                return DecryptAnnotationInfoBean.builder().decryptBodyMethod(DecryptBodyMethod.DES).key(decryptBody.value()).build();
+                return DecryptAnnotationInfoBean.builder().decryptBodyMethod(DecryptBodyMethod.DES).key(decryptBody.key()).build();
             }
         }
         if (method.isAnnotationPresent(AESDecryptBody.class)) {
@@ -135,8 +135,8 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
                 return DecryptAnnotationInfoBean.builder().decryptBodyMethod(DecryptBodyMethod.AES).key(decryptBody.key()).build();
             }
         }
-        if (method.isAnnotationPresent(RSAEncryptBody.class)) {
-            RSAEncryptBody decryptBody = methodParameter.getMethodAnnotation(RSAEncryptBody.class);
+        if (method.isAnnotationPresent(RSADecryptBody.class)) {
+            RSADecryptBody decryptBody = methodParameter.getMethodAnnotation(RSADecryptBody.class);
             if (decryptBody != null) {
                 return DecryptAnnotationInfoBean.builder().decryptBodyMethod(DecryptBodyMethod.RSA).key(decryptBody.key()).rsaKeyType(decryptBody.type()).build();
             }
@@ -159,7 +159,7 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
                     return DecryptAnnotationInfoBean.builder().decryptBodyMethod(decryptBody.value()).key(decryptBody.otherKey()).build();
                 }
                 if (annotation instanceof DESDecryptBody) {
-                    return DecryptAnnotationInfoBean.builder().decryptBodyMethod(DecryptBodyMethod.DES).key(((DESDecryptBody) annotation).value()).build();
+                    return DecryptAnnotationInfoBean.builder().decryptBodyMethod(DecryptBodyMethod.DES).key(((DESDecryptBody) annotation).key()).build();
                 }
                 if (annotation instanceof AESDecryptBody) {
                     return DecryptAnnotationInfoBean.builder().decryptBodyMethod(DecryptBodyMethod.AES).key(((AESDecryptBody) annotation).key()).build();

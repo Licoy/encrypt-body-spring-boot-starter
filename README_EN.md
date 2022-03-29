@@ -13,18 +13,18 @@
     - - [x] SHA-224 / 256 / 384 / 512
     - - [x] AES
     - - [x] DES
-    - - [ ] RSA
+    - - [x] RSA
 - There are ways to decrypt：
     - - [x] AES
     - - [x] DES
-    - - [ ] RSA
+    - - [x] RSA
 ## Usage method
 - Introducing dependencies in `pom.xml`：
 ```xml
 <dependency>
     <groupId>cn.licoy</groupId>
     <artifactId>encrypt-body-spring-boot-starter</artifactId>
-    <version>1.0.3.RELEASE</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 - Add the @EnableEncryptBody annotation to the `Application` class corresponding to the project, for example:

@@ -226,7 +226,6 @@ import java.lang.annotation.*;
 @Import({EncryptBodyConfig.class,
         HttpConverterConfig.class,
         EncryptResponseBodyAdvice.class,
-        DecryptRequestBodyAdvice.class,
-        HttpConverterConfig.class})
+        DecryptRequestBodyAdvice.class,})
 public @interface EnableEncryptBody {
 }

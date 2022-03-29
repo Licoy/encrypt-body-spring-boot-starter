@@ -1,6 +1,7 @@
 package cn.licoy.encryptbody.util;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.RSA;
 import cn.licoy.encryptbody.bean.ISecurityInfo;
 import cn.licoy.encryptbody.exception.IllegalSecurityTypeException;
@@ -28,10 +29,10 @@ public class CommonUtils {
         RSA rsa;
         switch (info.getRsaKeyType()) {
             case PUBLIC:
-                rsa = new RSA(null, info.getKey().getBytes());
+                rsa = new RSA(null, SecureUtil.decode(info.getKey()));
                 break;
             case PRIVATE:
-                rsa = new RSA(info.getKey().getBytes(), null);
+                rsa = new RSA(SecureUtil.decode(info.getKey()), null);
                 break;
             default:
                 throw new IllegalSecurityTypeException();

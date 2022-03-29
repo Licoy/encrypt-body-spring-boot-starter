@@ -12,18 +12,18 @@
     - - [x] SHA-224 / 256 / 384 / 512
     - - [x] AES
     - - [x] DES
-    - - [ ] RSA
+    - - [x] RSA
 - 可进行解密的方式有：
     - - [x] AES
     - - [x] DES
-    - - [ ] RSA
+    - - [x] RSA
 ## 使用方法
 - 在`pom.xml`中引入依赖：
 ```xml
 <dependency>
     <groupId>cn.licoy</groupId>
     <artifactId>encrypt-body-spring-boot-starter</artifactId>
-    <version>1.0.4.RELEASE</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 - 在工程对应的`Application`类中增加@EnableEncryptBody注解，例如：

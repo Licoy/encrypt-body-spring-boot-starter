@@ -41,7 +41,7 @@ import java.lang.reflect.Method;
 @Order(1)
 @ControllerAdvice
 @Slf4j
-public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<String> {
+public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
     private final ObjectMapper objectMapper;
 
@@ -82,19 +82,24 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<String> {
     }
 
     @Override
-    public String beforeBodyWrite(String body, MethodParameter returnType, MediaType selectedContentType,
+    public String beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
                                   Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   ServerHttpRequest request, ServerHttpResponse response) {
         if (body == null) {
             return null;
         }
-        response.getHeaders().setContentType(MediaType.TEXT_PLAIN);
-        String str = null;
-        try {
-            str = objectMapper.writeValueAsString(body);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+        String str;
+        if (body instanceof String || body instanceof Number || body instanceof Boolean) {
+            str = String.valueOf(body);
+        } else {
+            try {
+                str = objectMapper.writeValueAsString(body);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                throw new EncryptBodyFailException(e.getMessage());
+            }
         }
+        response.getHeaders().setContentType(MediaType.TEXT_PLAIN);
         EncryptAnnotationInfoBean classAnnotation = getClassAnnotation(returnType.getDeclaringClass());
         if (classAnnotation != null) {
             return switchEncrypt(str, classAnnotation);
@@ -257,4 +262,5 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<String> {
         }
         throw new EncryptBodyFailException();
     }
+
 }
