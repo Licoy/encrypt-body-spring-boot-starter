@@ -1,12 +1,8 @@
 package cn.licoy.encryptbody.bean;
 
 import cn.licoy.encryptbody.enums.DecryptBodyMethod;
-import cn.licoy.encryptbody.enums.EncryptBodyMethod;
-import cn.licoy.encryptbody.enums.SHAEncryptType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import cn.licoy.encryptbody.enums.RSAKeyType;
+import lombok.*;
 
 /**
  * <p>解密注解信息</p>
@@ -17,10 +13,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DecryptAnnotationInfoBean {
+public class DecryptAnnotationInfoBean implements ISecurityInfo {
 
     private DecryptBodyMethod decryptBodyMethod;
 
     private String key;
+
+    private RSAKeyType rsaKeyType;
 
 }

@@ -12,6 +12,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface DESDecryptBody {
 
-    String otherKey() default "";
+    String value() default "";
 
 }

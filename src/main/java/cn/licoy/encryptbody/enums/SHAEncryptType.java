@@ -1,6 +1,9 @@
 package cn.licoy.encryptbody.enums;
 
+import cn.hutool.crypto.SecureUtil;
 import lombok.AllArgsConstructor;
+
+import java.util.function.Function;
 
 /**
  * <p>SHA加密类型</p>
@@ -10,13 +13,12 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum  SHAEncryptType {
 
-    SHA224("sha-224"),
-    SHA256("sha-256"),
-    SHA384("sha-384"),
-    SHA512("sha-512"),
+    /**
+     * SHA TYPE
+     */
+    SHA1,
+    SHA256
     ;
-
-    public String value;
 
 
 }

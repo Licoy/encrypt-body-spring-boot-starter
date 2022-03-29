@@ -7,6 +7,17 @@ package cn.licoy.encryptbody.enums;
  */
 public enum DecryptBodyMethod {
 
-    DES,AES,RSA
+    /**
+     * DES
+     */
+    DES,
+    /**
+     * AES
+     */
+    AES,
+    /**
+     * RAS
+     */
+    RSA
 
 }

@@ -7,6 +7,25 @@ package cn.licoy.encryptbody.enums;
  */
 public enum EncryptBodyMethod {
 
-    MD5,DES,AES,SHA,RSA
+    /**
+     * MD5
+     */
+    MD5,
+    /**
+     * DES
+     */
+    DES,
+    /**
+     * AES
+     */
+    AES,
+    /**
+     * SHA
+     */
+    SHA,
+    /**
+     * RSA
+     */
+    RSA
 
 }

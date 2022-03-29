@@ -215,6 +215,7 @@ import java.lang.annotation.*;
  * <p>启动类</p>
  * <p>使用方法：在SpringBoot的Application启动类上添加此注解即可</p>
  * <p>更多使用信息请参考：<a href='https://github.com/Licoy/encrypt-body-spring-boot-starter/blob/master/README.md'>README</a></p>
+ *
  * @author licoy.cn
  * @version 2018/9/6
  */
@@ -225,6 +226,7 @@ import java.lang.annotation.*;
 @Import({EncryptBodyConfig.class,
         HttpConverterConfig.class,
         EncryptResponseBodyAdvice.class,
-        DecryptRequestBodyAdvice.class})
+        DecryptRequestBodyAdvice.class,
+        HttpConverterConfig.class})
 public @interface EnableEncryptBody {
 }

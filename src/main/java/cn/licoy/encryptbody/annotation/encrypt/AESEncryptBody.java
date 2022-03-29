@@ -12,6 +12,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface AESEncryptBody {
 
-    String otherKey() default "";
+    String key() default "";
 
 }
