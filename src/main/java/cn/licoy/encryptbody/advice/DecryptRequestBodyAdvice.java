@@ -1,14 +1,15 @@
 package cn.licoy.encryptbody.advice;
 
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.RSA;
+import cn.licoy.encryptbody.annotation.FieldBody;
 import cn.licoy.encryptbody.annotation.decrypt.AESDecryptBody;
 import cn.licoy.encryptbody.annotation.decrypt.DESDecryptBody;
 import cn.licoy.encryptbody.annotation.decrypt.DecryptBody;
 import cn.licoy.encryptbody.annotation.decrypt.RSADecryptBody;
-import cn.licoy.encryptbody.annotation.encrypt.RSAEncryptBody;
 import cn.licoy.encryptbody.bean.DecryptAnnotationInfoBean;
 import cn.licoy.encryptbody.bean.DecryptHttpInputMessage;
 import cn.licoy.encryptbody.config.EncryptBodyConfig;
@@ -16,6 +17,7 @@ import cn.licoy.encryptbody.enums.DecryptBodyMethod;
 import cn.licoy.encryptbody.exception.DecryptBodyFailException;
 import cn.licoy.encryptbody.exception.DecryptMethodNotFoundException;
 import cn.licoy.encryptbody.util.CommonUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.Order;
@@ -24,7 +26,8 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdvice;
 
-import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
@@ -44,25 +47,35 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
 
     private final EncryptBodyConfig config;
 
-    public DecryptRequestBodyAdvice(EncryptBodyConfig config) {
+    private final ObjectMapper objectMapper;
+
+    public DecryptRequestBodyAdvice(ObjectMapper objectMapper, EncryptBodyConfig config) {
+        this.objectMapper = objectMapper;
         this.config = config;
     }
 
     @Override
     public boolean supports(MethodParameter methodParameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
-        Annotation[] annotations = methodParameter.getDeclaringClass().getAnnotations();
-        if (annotations.length > 0) {
-            for (Annotation annotation : annotations) {
-                if (annotation instanceof DecryptBody || annotation instanceof AESDecryptBody || annotation instanceof DESDecryptBody || annotation instanceof RSADecryptBody) {
+        if (this.hasDecryptAnnotation(methodParameter.getDeclaringClass())) {
+            return true;
+        }
+        Method method = methodParameter.getMethod();
+        if (method != null) {
+            if (this.hasDecryptAnnotation(method)) {
+                return true;
+            }
+            Class<?>[] parameterTypes = method.getParameterTypes();
+            for (Class<?> parameterType : parameterTypes) {
+                if (this.hasDecryptAnnotation(parameterType)) {
                     return true;
                 }
             }
         }
-        Method method = methodParameter.getMethod();
-        if (method == null) {
-            return false;
-        }
-        return method.isAnnotationPresent(DecryptBody.class) || method.isAnnotationPresent(AESDecryptBody.class) || method.isAnnotationPresent(DESDecryptBody.class) || method.isAnnotationPresent(RSADecryptBody.class);
+        return false;
+    }
+
+    private boolean hasDecryptAnnotation(AnnotatedElement annotatedElement) {
+        return annotatedElement.isAnnotationPresent(DecryptBody.class) || annotatedElement.isAnnotationPresent(AESDecryptBody.class) || annotatedElement.isAnnotationPresent(DESDecryptBody.class) || annotatedElement.isAnnotationPresent(RSADecryptBody.class);
     }
 
     @Override
@@ -81,12 +94,33 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
         if (body == null || StrUtil.isEmpty(body)) {
             throw new DecryptBodyFailException("The request body is NULL or an empty string, so the decryption failed." + " (请求正文为NULL或为空字符串，因此解密失败。)");
         }
+        Class<?> targetTypeClass;
+        try {
+            targetTypeClass = Class.forName(targetType.getTypeName());
+        } catch (ClassNotFoundException e) {
+            throw new DecryptBodyFailException(e.getMessage());
+        }
         String decryptBody = null;
-        DecryptAnnotationInfoBean methodAnnotation = this.getMethodAnnotation(parameter);
+        DecryptAnnotationInfoBean methodAnnotation = this.getDecryptAnnotation(parameter.getMethod());
         if (methodAnnotation != null) {
             decryptBody = switchDecrypt(body, methodAnnotation);
+        } else if (this.hasDecryptAnnotation(targetTypeClass)) {
+            if (targetTypeClass.isAnnotationPresent(FieldBody.class)) {
+                try {
+                    Object bodyInstance = objectMapper.readValue(body, targetTypeClass);
+                    Object decryptBodyInstance = this.eachClassField(bodyInstance, targetTypeClass);
+                    decryptBody = objectMapper.writeValueAsString(decryptBodyInstance);
+                } catch (Exception e) {
+                    throw new DecryptBodyFailException(e.getMessage());
+                }
+            } else {
+                DecryptAnnotationInfoBean classAnnotation = this.getDecryptAnnotation(targetTypeClass);
+                if (classAnnotation != null) {
+                    decryptBody = switchDecrypt(body, classAnnotation);
+                }
+            }
         } else {
-            DecryptAnnotationInfoBean classAnnotation = this.getClassAnnotation(parameter.getDeclaringClass());
+            DecryptAnnotationInfoBean classAnnotation = this.getDecryptAnnotation(parameter.getDeclaringClass());
             if (classAnnotation != null) {
                 decryptBody = switchDecrypt(body, classAnnotation);
             }
@@ -106,64 +140,67 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
         return body;
     }
 
+    private Object eachClassField(Object body, Class<?> clazz) {
+        Field[] declaredFields = clazz.getDeclaredFields();
+        for (Field field : declaredFields) {
+            field.setAccessible(true);
+            DecryptAnnotationInfoBean decryptAnnotation = this.getDecryptAnnotation(field);
+            Class<?> type = field.getType();
+            if (decryptAnnotation != null) {
+                FieldBody fieldBody = field.getAnnotation(FieldBody.class);
+                if (fieldBody != null) {
+                    Field setField = ReflectUtil.getField(clazz, fieldBody.field());
+                    if (setField != null && setField.getType().equals(String.class)) {
+                        Object fieldValue = ReflectUtil.getFieldValue(body, setField);
+                        String decryptResult = this.switchDecrypt(String.valueOf(fieldValue), decryptAnnotation);
+                        ReflectUtil.setFieldValue(body, field, decryptResult);
+                    }
+                } else if (type.equals(String.class)) {
+                    String decryptResult = this.switchDecrypt(String.valueOf(ReflectUtil.getFieldValue(body, field)), decryptAnnotation);
+                    ReflectUtil.setFieldValue(body, field, decryptResult);
+                }
+            } else if (!CommonUtils.isConvertToString(type)) {
+                Object fieldValue = ReflectUtil.getFieldValue(body, field);
+                if (fieldValue != null) {
+                    this.eachClassField(fieldValue, type);
+                }
+            }
+        }
+        return body;
+    }
+
     /**
-     * 获取方法控制器上的加密注解信息
+     * 获取解密注解的数据
      *
-     * @param methodParameter 控制器方法
-     * @return 加密注解信息
+     * @param annotatedElement 注解元素
+     * @return 解密注解组装数据
      */
-    private DecryptAnnotationInfoBean getMethodAnnotation(MethodParameter methodParameter) {
-        Method method = methodParameter.getMethod();
-        if (method == null) {
+    private DecryptAnnotationInfoBean getDecryptAnnotation(AnnotatedElement annotatedElement) {
+        if (annotatedElement == null) {
             return null;
         }
-        if (method.isAnnotationPresent(DecryptBody.class)) {
-            DecryptBody decryptBody = methodParameter.getMethodAnnotation(DecryptBody.class);
+        if (annotatedElement.isAnnotationPresent(DecryptBody.class)) {
+            DecryptBody decryptBody = annotatedElement.getAnnotation(DecryptBody.class);
             if (decryptBody != null) {
                 return DecryptAnnotationInfoBean.builder().decryptBodyMethod(decryptBody.value()).key(decryptBody.otherKey()).build();
             }
         }
-        if (method.isAnnotationPresent(DESDecryptBody.class)) {
-            DESDecryptBody decryptBody = methodParameter.getMethodAnnotation(DESDecryptBody.class);
+        if (annotatedElement.isAnnotationPresent(DESDecryptBody.class)) {
+            DESDecryptBody decryptBody = annotatedElement.getAnnotation(DESDecryptBody.class);
             if (decryptBody != null) {
                 return DecryptAnnotationInfoBean.builder().decryptBodyMethod(DecryptBodyMethod.DES).key(decryptBody.key()).build();
             }
         }
-        if (method.isAnnotationPresent(AESDecryptBody.class)) {
-            AESDecryptBody decryptBody = methodParameter.getMethodAnnotation(AESDecryptBody.class);
+        if (annotatedElement.isAnnotationPresent(AESDecryptBody.class)) {
+            AESDecryptBody decryptBody = annotatedElement.getAnnotation(AESDecryptBody.class);
             if (decryptBody != null) {
                 return DecryptAnnotationInfoBean.builder().decryptBodyMethod(DecryptBodyMethod.AES).key(decryptBody.key()).build();
             }
         }
-        if (method.isAnnotationPresent(RSADecryptBody.class)) {
-            RSADecryptBody decryptBody = methodParameter.getMethodAnnotation(RSADecryptBody.class);
+        if (annotatedElement.isAnnotationPresent(RSADecryptBody.class)) {
+            RSADecryptBody decryptBody = annotatedElement.getAnnotation(RSADecryptBody.class);
             if (decryptBody != null) {
                 return DecryptAnnotationInfoBean.builder().decryptBodyMethod(DecryptBodyMethod.RSA).key(decryptBody.key()).rsaKeyType(decryptBody.type()).build();
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 获取类控制器上的加密注解信息
-     *
-     * @param clazz 控制器类
-     * @return 加密注解信息
-     */
-    private DecryptAnnotationInfoBean getClassAnnotation(Class<?> clazz) {
-        Annotation[] annotations = clazz.getDeclaredAnnotations();
-        if (annotations.length > 0) {
-            for (Annotation annotation : annotations) {
-                if (annotation instanceof DecryptBody) {
-                    DecryptBody decryptBody = (DecryptBody) annotation;
-                    return DecryptAnnotationInfoBean.builder().decryptBodyMethod(decryptBody.value()).key(decryptBody.otherKey()).build();
-                }
-                if (annotation instanceof DESDecryptBody) {
-                    return DecryptAnnotationInfoBean.builder().decryptBodyMethod(DecryptBodyMethod.DES).key(((DESDecryptBody) annotation).key()).build();
-                }
-                if (annotation instanceof AESDecryptBody) {
-                    return DecryptAnnotationInfoBean.builder().decryptBodyMethod(DecryptBodyMethod.AES).key(((AESDecryptBody) annotation).key()).build();
-                }
             }
         }
         return null;

@@ -12,3 +12,4 @@ buildNumber.properties
 !/.mvn/wrapper/maven-wrapper.jar
 .idea/*
 *.iml
+src/main/java/cn/licoy/encryptbody/test

@@ -1,11 +1,15 @@
 package cn.licoy.encryptbody.util;
 
+import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.RSA;
 import cn.licoy.encryptbody.bean.ISecurityInfo;
+import cn.licoy.encryptbody.exception.EncryptBodyFailException;
 import cn.licoy.encryptbody.exception.IllegalSecurityTypeException;
 import cn.licoy.encryptbody.exception.KeyNotConfiguredException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * <p>工具类</p>
@@ -25,6 +29,12 @@ public class CommonUtils {
         return k1;
     }
 
+    /**
+     * 根据信息对象获取RSA实例
+     *
+     * @param info 信息
+     * @return rsa
+     */
     public static RSA infoBeanToRsaInstance(ISecurityInfo info) {
         RSA rsa;
         switch (info.getRsaKeyType()) {
@@ -38,6 +48,35 @@ public class CommonUtils {
                 throw new IllegalSecurityTypeException();
         }
         return rsa;
+    }
+
+    /**
+     * 是否转换为string
+     *
+     * @param clazz class
+     * @return 是否
+     */
+    public static boolean isConvertToString(Class<?> clazz) {
+        return clazz.equals(String.class) || ClassUtil.isPrimitiveWrapper(clazz);
+    }
+
+    /**
+     * 转换为string
+     *
+     * @param val    数据
+     * @param mapper jackson
+     * @return string
+     */
+    public static String convertToStringOrJson(Object val, ObjectMapper mapper) {
+        if (isConvertToString(val.getClass())) {
+            return String.valueOf(val);
+        }
+        try {
+            return mapper.writeValueAsString(val);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new EncryptBodyFailException(e.getMessage());
+        }
     }
 
 }
