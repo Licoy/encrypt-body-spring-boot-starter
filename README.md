@@ -24,7 +24,7 @@
 <dependency>
     <groupId>cn.licoy</groupId>
     <artifactId>encrypt-body-spring-boot-starter</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.3</version>
 </dependency>
 ```
 ### 启用组件
