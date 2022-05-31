@@ -85,7 +85,6 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         }
         String str = CommonUtils.convertToStringOrJson(body, objectMapper);
         response.getHeaders().setContentType(MediaType.TEXT_PLAIN);
-        EncryptAnnotationInfoBean classAnnotation = this.getEncryptAnnotation(returnType.getDeclaringClass());
         Method method = returnType.getMethod();
         if (method != null) {
             // 从方法上
@@ -103,13 +102,15 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
                     throw new EncryptBodyFailException(e.getMessage());
                 }
             } else {
-                classAnnotation = this.getEncryptAnnotation(method.getReturnType());
-                if (classAnnotation != null) {
-                    return switchEncrypt(str, classAnnotation);
+                EncryptAnnotationInfoBean returnTypeClassAnnotation = this.getEncryptAnnotation(methodReturnType);
+                if (returnTypeClassAnnotation != null) {
+                    return switchEncrypt(str, returnTypeClassAnnotation);
                 }
             }
         }
+
         // 从声明类上
+        EncryptAnnotationInfoBean classAnnotation = this.getEncryptAnnotation(returnType.getDeclaringClass());
         if (classAnnotation != null) {
             return switchEncrypt(str, classAnnotation);
         }
