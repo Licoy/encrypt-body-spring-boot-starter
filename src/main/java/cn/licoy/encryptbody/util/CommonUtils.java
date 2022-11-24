@@ -8,6 +8,9 @@ import cn.licoy.encryptbody.bean.ISecurityInfo;
 import cn.licoy.encryptbody.exception.EncryptBodyFailException;
 import cn.licoy.encryptbody.exception.IllegalSecurityTypeException;
 import cn.licoy.encryptbody.exception.KeyNotConfiguredException;
+
+import java.io.FileInputStream;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -37,18 +40,50 @@ public class CommonUtils {
      */
     public static RSA infoBeanToRsaInstance(ISecurityInfo info) {
         RSA rsa;
-        switch (info.getRsaKeyType()) {
-            case PUBLIC:
-                rsa = new RSA(null, SecureUtil.decode(info.getKey()));
-                break;
-            case PRIVATE:
-                rsa = new RSA(SecureUtil.decode(info.getKey()), null);
-                break;
-            default:
-                throw new IllegalSecurityTypeException();
+        System.out.println("**** info : " + info.toString());
+
+
+        try {
+            switch (info.getRsaKeyType()) {
+                case PUBLIC:
+                    rsa = loadRsaPublicKey(info.getKey());
+                    break;
+                case PRIVATE:
+                    rsa = loadRsaPrivateKey(info.getKey());
+                    break;
+                default:
+                    throw new IllegalSecurityTypeException();
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("failed to load rsa, " + e.getMessage());
         }
+        
+
         return rsa;
     }
+
+    private static RSA loadRsaPublicKey(String key) throws Exception {
+        try {
+            return new RSA(null, SecureUtil.decode(key));
+        } catch (Exception e) {
+            System.out.println("key file name: " + key);
+            key = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(key)), java.nio.charset.StandardCharsets.UTF_8);
+            System.out.println("key data: " + key);
+            return new RSA(null, SecureUtil.decode(key));
+        } 
+    }
+
+    private static RSA loadRsaPrivateKey(String key) throws Exception {
+        try {
+            return new RSA(SecureUtil.decode(key), null);
+        } catch (Exception e) {
+            key = java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(key)).toString();
+            return new RSA(SecureUtil.decode(key), null);
+        } 
+
+    }
+
 
     /**
      * 是否转换为string

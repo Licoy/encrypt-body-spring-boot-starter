@@ -26,6 +26,15 @@ public enum EncryptBodyMethod {
     /**
      * RSA
      */
-    RSA
+    RSA,
+    /** 
+     * SKEY
+    */
+    SKEY,
+    /**
+     * USER
+     */
+    USER
+
 
 }

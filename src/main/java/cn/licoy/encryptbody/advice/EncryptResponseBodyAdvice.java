@@ -30,6 +30,8 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import javax.crypto.SecretKey;
+
 
 /**
  * 响应数据的加密处理<br>
@@ -75,7 +77,14 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         if (annotatedElement == null) {
             return false;
         }
-        return annotatedElement.isAnnotationPresent(EncryptBody.class) || annotatedElement.isAnnotationPresent(AESEncryptBody.class) || annotatedElement.isAnnotationPresent(DESEncryptBody.class) || annotatedElement.isAnnotationPresent(RSAEncryptBody.class) || annotatedElement.isAnnotationPresent(MD5EncryptBody.class) || annotatedElement.isAnnotationPresent(SHAEncryptBody.class);
+        return annotatedElement.isAnnotationPresent(EncryptBody.class) 
+            || annotatedElement.isAnnotationPresent(AESEncryptBody.class) 
+            || annotatedElement.isAnnotationPresent(DESEncryptBody.class) 
+            || annotatedElement.isAnnotationPresent(RSAEncryptBody.class) 
+            || annotatedElement.isAnnotationPresent(MD5EncryptBody.class) 
+            || annotatedElement.isAnnotationPresent(SHAEncryptBody.class)
+            || annotatedElement.isAnnotationPresent(SkeyEncryptBody.class)
+            || annotatedElement.isAnnotationPresent(UserEncryptBody.class);
     }
 
     @Override
@@ -197,6 +206,18 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
                 return EncryptAnnotationInfoBean.builder().encryptBodyMethod(EncryptBodyMethod.RSA).key(encryptBody.key()).rsaKeyType(encryptBody.type()).build();
             }
         }
+        if (annotatedElement.isAnnotationPresent(SkeyEncryptBody.class)) {
+            SkeyEncryptBody encryptBody = annotatedElement.getAnnotation(SkeyEncryptBody.class);
+            if (encryptBody != null) {
+                return EncryptAnnotationInfoBean.builder().encryptBodyMethod(EncryptBodyMethod.SKEY).key(encryptBody.key()).rsaKeyType(encryptBody.type()).build();
+            }
+        }
+        if (annotatedElement.isAnnotationPresent(UserEncryptBody.class)) {
+            UserEncryptBody encryptBody = annotatedElement.getAnnotation(UserEncryptBody.class);
+            if (encryptBody != null) {
+                return EncryptAnnotationInfoBean.builder().encryptBodyMethod(EncryptBodyMethod.USER).crypto(encryptBody.crypto()).build();
+            }
+        }
         return null;
     }
 
@@ -235,6 +256,23 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         if (method == EncryptBodyMethod.RSA) {
             RSA rsa = CommonUtils.infoBeanToRsaInstance(infoBean);
             return rsa.encryptHex(formatStringBody, infoBean.getRsaKeyType().toolType);
+        }
+        if (method == EncryptBodyMethod.SKEY) {
+            SecretKey aesKey = SecureUtil.generateKey("AES");
+            RSA rsa = CommonUtils.infoBeanToRsaInstance(infoBean);
+            String encryptedText = SecureUtil.aes(aesKey.getEncoded()).encryptHex(formatStringBody);
+            String encryptedKey = rsa.encryptHex(aesKey.getEncoded(), infoBean.getRsaKeyType().toolType);
+            return (encryptedText + "|" + encryptedKey);
+        }
+        if (method == EncryptBodyMethod.USER) {
+            try {
+                Class<?> clazz = Class.forName(infoBean.getCrypto());
+                Method m = clazz.getMethod("encrypt", String.class);
+                return m.invoke(null, formatStringBody).toString();
+            } catch(Exception e) {
+                return "failed to encrypt: " + formatStringBody;
+            }
+            
         }
         throw new EncryptBodyFailException();
     }

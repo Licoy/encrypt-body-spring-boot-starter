@@ -21,4 +21,6 @@ public class DecryptAnnotationInfoBean implements ISecurityInfo {
 
     private RSAKeyType rsaKeyType;
 
+    private String crypto;
+
 }

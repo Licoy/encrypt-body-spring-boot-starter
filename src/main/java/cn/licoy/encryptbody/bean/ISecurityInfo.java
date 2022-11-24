@@ -2,6 +2,7 @@ package cn.licoy.encryptbody.bean;
 
 import cn.licoy.encryptbody.enums.RSAKeyType;
 
+
 import java.io.Serializable;
 
 /**
@@ -26,4 +27,5 @@ public interface ISecurityInfo extends Serializable {
      */
     RSAKeyType getRsaKeyType();
 
+    String getCrypto();
 }

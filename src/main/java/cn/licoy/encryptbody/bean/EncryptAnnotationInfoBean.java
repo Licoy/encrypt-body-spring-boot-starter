@@ -25,4 +25,6 @@ public class EncryptAnnotationInfoBean implements ISecurityInfo {
 
     private RSAKeyType rsaKeyType;
 
+    private String crypto;
+
 }
