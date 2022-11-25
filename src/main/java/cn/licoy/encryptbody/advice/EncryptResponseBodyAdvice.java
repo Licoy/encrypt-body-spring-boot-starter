@@ -83,7 +83,6 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             || annotatedElement.isAnnotationPresent(RSAEncryptBody.class) 
             || annotatedElement.isAnnotationPresent(MD5EncryptBody.class) 
             || annotatedElement.isAnnotationPresent(SHAEncryptBody.class)
-            || annotatedElement.isAnnotationPresent(SkeyEncryptBody.class)
             || annotatedElement.isAnnotationPresent(CustomEncryptBody.class);
     }
 
@@ -206,12 +205,6 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
                 return EncryptAnnotationInfoBean.builder().encryptBodyMethod(EncryptBodyMethod.RSA).key(encryptBody.key()).rsaKeyType(encryptBody.type()).build();
             }
         }
-        if (annotatedElement.isAnnotationPresent(SkeyEncryptBody.class)) {
-            SkeyEncryptBody encryptBody = annotatedElement.getAnnotation(SkeyEncryptBody.class);
-            if (encryptBody != null) {
-                return EncryptAnnotationInfoBean.builder().encryptBodyMethod(EncryptBodyMethod.SKEY).key(encryptBody.key()).rsaKeyType(encryptBody.type()).build();
-            }
-        }
         if (annotatedElement.isAnnotationPresent(CustomEncryptBody.class)) {
             CustomEncryptBody encryptBody = annotatedElement.getAnnotation(CustomEncryptBody.class);
             if (encryptBody != null) {
@@ -256,13 +249,6 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         if (method == EncryptBodyMethod.RSA) {
             RSA rsa = CommonUtils.infoBeanToRsaInstance(infoBean);
             return rsa.encryptHex(formatStringBody, infoBean.getRsaKeyType().toolType);
-        }
-        if (method == EncryptBodyMethod.SKEY) {
-            SecretKey aesKey = SecureUtil.generateKey("AES");
-            RSA rsa = CommonUtils.infoBeanToRsaInstance(infoBean);
-            String encryptedText = SecureUtil.aes(aesKey.getEncoded()).encryptHex(formatStringBody);
-            String encryptedKey = rsa.encryptHex(aesKey.getEncoded(), infoBean.getRsaKeyType().toolType);
-            return (encryptedText + "|" + encryptedKey);
         }
         if (method == EncryptBodyMethod.CUSTOM) {
             try {
