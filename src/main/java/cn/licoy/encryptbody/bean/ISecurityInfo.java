@@ -27,10 +27,26 @@ public interface ISecurityInfo extends Serializable {
      */
     RSAKeyType getRsaKeyType();
 
+
+    /**
+     * Get the class name of custom encryption/decryption provider
+     * 
+     * @return class name
+     */
     String getProviderClassName();
 
+    /**
+     * Get the method name to be used to encryption.
+     * 
+     * @return encryption method name.
+     */
     String getEncryptMethodName();
 
+    /**
+     * Get the method name to be used to decryption.
+     * 
+     * @return decryption method name.
+     */
     String getDecryptMethodName();
 
 }

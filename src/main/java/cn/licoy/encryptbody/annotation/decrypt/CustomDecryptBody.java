@@ -1,21 +1,18 @@
-package cn.licoy.encryptbody.annotation.encrypt;
-
-
-
+package cn.licoy.encryptbody.annotation.decrypt;
 
 import java.lang.annotation.*;
 
-@Target(value = {ElementType.METHOD, ElementType.TYPE, ElementType.FIELD})
+@Target(value = {ElementType.METHOD,ElementType.TYPE,ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface CustomEncryptBody {
 
+public @interface CustomDecryptBody {
      /**
       * Custom encryption/decryption provider class name.
       * 
       * @return provider class name
       */
-     public String providerClassName() default "";
+    public String providerClassName() default "";
 
      /**
       * Name of the static method in provider class to be used for encryption.
@@ -23,7 +20,7 @@ public @interface CustomEncryptBody {
       * 
       * @return
       */
-     public String encryptMethodName() default "encrypt";
+    public String encryptMethodName() default "encrypt";
 
      /**
       * Name of the static method in provider class to be used for decryption.
@@ -31,6 +28,6 @@ public @interface CustomEncryptBody {
       * 
       * @return
       */
-      public String decryptMethodName() default "decrypt";
-
+    public String decryptMethodName() default "decrypt";
+   
 }
