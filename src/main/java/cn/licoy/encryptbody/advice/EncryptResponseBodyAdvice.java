@@ -30,7 +30,6 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import javax.crypto.SecretKey;
 
 
 /**
@@ -86,42 +85,46 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             || annotatedElement.isAnnotationPresent(CustomEncryptBody.class);
     }
 
+
+
     @Override
-    public String beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         if (body == null) {
             return null;
         }
         String str = CommonUtils.convertToStringOrJson(body, objectMapper);
-        response.getHeaders().setContentType(MediaType.TEXT_PLAIN);
+
         Method method = returnType.getMethod();
         if (method != null) {
-            // 从方法上
-            EncryptAnnotationInfoBean methodAnnotation = this.getEncryptAnnotation(method);
-            if (methodAnnotation != null) {
-                return switchEncrypt(str, methodAnnotation);
-            }
-            // 从方法返回值上
+
+            //check if only some fields is response should be encrypted or the whole response should be encrypted.
+            //if only field encryption is required, we should not change the content-type and keep the returned object intact.
             Class<?> methodReturnType = method.getReturnType();
             if (methodReturnType.isAnnotationPresent(FieldBody.class)) {
-                Object encryptResult = this.eachClassField(body, method.getReturnType());
-                try {
-                    return objectMapper.writeValueAsString(encryptResult);
-                } catch (JsonProcessingException e) {
-                    throw new EncryptBodyFailException(e.getMessage());
-                }
-            } else {
-                EncryptAnnotationInfoBean returnTypeClassAnnotation = this.getEncryptAnnotation(methodReturnType);
-                if (returnTypeClassAnnotation != null) {
-                    return switchEncrypt(str, returnTypeClassAnnotation);
-                }
+                return this.eachClassField(body, method.getReturnType());
+            }
+
+            EncryptAnnotationInfoBean methodAnnotation = this.getEncryptAnnotation(method);
+            if (methodAnnotation != null) {
+                response.getHeaders().setContentType(MediaType.TEXT_PLAIN);
+                return switchEncrypt(str, methodAnnotation);
+            }
+
+            EncryptAnnotationInfoBean returnTypeClassAnnotation = this.getEncryptAnnotation(methodReturnType);
+            if (returnTypeClassAnnotation != null) {
+                response.getHeaders().setContentType(MediaType.TEXT_PLAIN);
+                return switchEncrypt(str, returnTypeClassAnnotation);
             }
         }
 
         // 从声明类上
         EncryptAnnotationInfoBean classAnnotation = this.getEncryptAnnotation(returnType.getDeclaringClass());
         if (classAnnotation != null) {
+            response.getHeaders().setContentType(MediaType.TEXT_PLAIN);
             return switchEncrypt(str, classAnnotation);
         }
+
+
         throw new EncryptBodyFailException();
     }
 
