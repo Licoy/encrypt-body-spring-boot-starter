@@ -120,7 +120,7 @@ public class User implements Serializable {
 }
 ```
 
-## Using CUSTOM encryption/decryption
+## 使用自定义加密/解密
 ````java
 @Data
 @EncryptBody
