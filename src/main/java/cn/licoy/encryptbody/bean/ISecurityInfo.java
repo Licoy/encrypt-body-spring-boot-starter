@@ -27,5 +27,10 @@ public interface ISecurityInfo extends Serializable {
      */
     RSAKeyType getRsaKeyType();
 
-    String getCrypto();
+    String getProviderClassName();
+
+    String getEncryptMethodName();
+
+    String getDecryptMethodName();
+
 }

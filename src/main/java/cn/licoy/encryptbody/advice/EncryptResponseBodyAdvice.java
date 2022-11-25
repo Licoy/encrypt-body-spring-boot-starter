@@ -84,7 +84,7 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             || annotatedElement.isAnnotationPresent(MD5EncryptBody.class) 
             || annotatedElement.isAnnotationPresent(SHAEncryptBody.class)
             || annotatedElement.isAnnotationPresent(SkeyEncryptBody.class)
-            || annotatedElement.isAnnotationPresent(UserEncryptBody.class);
+            || annotatedElement.isAnnotationPresent(CustomEncryptBody.class);
     }
 
     @Override
@@ -212,10 +212,10 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
                 return EncryptAnnotationInfoBean.builder().encryptBodyMethod(EncryptBodyMethod.SKEY).key(encryptBody.key()).rsaKeyType(encryptBody.type()).build();
             }
         }
-        if (annotatedElement.isAnnotationPresent(UserEncryptBody.class)) {
-            UserEncryptBody encryptBody = annotatedElement.getAnnotation(UserEncryptBody.class);
+        if (annotatedElement.isAnnotationPresent(CustomEncryptBody.class)) {
+            CustomEncryptBody encryptBody = annotatedElement.getAnnotation(CustomEncryptBody.class);
             if (encryptBody != null) {
-                return EncryptAnnotationInfoBean.builder().encryptBodyMethod(EncryptBodyMethod.USER).crypto(encryptBody.crypto()).build();
+                return EncryptAnnotationInfoBean.builder().encryptBodyMethod(EncryptBodyMethod.CUSTOM).providerClassName(encryptBody.providerClassName()).encryptMethodName(encryptBody.encryptMethodName()).build();
             }
         }
         return null;
@@ -264,10 +264,10 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             String encryptedKey = rsa.encryptHex(aesKey.getEncoded(), infoBean.getRsaKeyType().toolType);
             return (encryptedText + "|" + encryptedKey);
         }
-        if (method == EncryptBodyMethod.USER) {
+        if (method == EncryptBodyMethod.CUSTOM) {
             try {
-                Class<?> clazz = Class.forName(infoBean.getCrypto());
-                Method m = clazz.getMethod("encrypt", String.class);
+                Class<?> clazz = Class.forName(infoBean.getProviderClassName());
+                Method m = clazz.getMethod(infoBean.getEncryptMethodName(), String.class);
                 return m.invoke(null, formatStringBody).toString();
             } catch(Exception e) {
                 return "failed to encrypt: " + formatStringBody;

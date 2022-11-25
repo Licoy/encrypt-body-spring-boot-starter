@@ -32,9 +32,9 @@ public enum EncryptBodyMethod {
     */
     SKEY,
     /**
-     * USER
+     * CUSTOM
      */
-    USER
+    CUSTOM
 
 
 }
