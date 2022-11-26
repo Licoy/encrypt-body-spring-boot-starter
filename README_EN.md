@@ -13,10 +13,12 @@
     - - [x] AES
     - - [x] DES
     - - [x] RSA
+    - - [x] CUSTOM
 - The methods that can be decrypted are:
     - - [x] AES
     - - [x] DES
     - - [x] RSA
+    - - [x] CUSTOM
 ## Import registration
 ### Import dependencies
 Introduce dependencies in the project's `pom.xml`:
@@ -116,6 +118,43 @@ public class User implements Serializable {
 
 }
 ````
+
+## Using CUSTOM encryption/decryption
+````java
+@Data
+@EncryptBody
+@FieldBody
+public class User implements Serializable {
+
+    @CustomDecryptBody(providerClassName = "com.myorg.mypkg.MyCryptoProvider", decryptMethodName = "myDecryptionFunction")
+    private String name;
+
+    @CustomEncryptBody(providerClassName = "com.myorg.mypkg.MyCryptoProvider", encryptMethodName = "myEncryptionFunction")
+    private String numberValue;
+
+
+
+}
+````
+
+Implement the `MyCryptoProvider` class with `myEncryptionFunction` as shown below.
+```java
+package com.myorg.mypkg;
+
+public class MyCryptoProvider {
+    String myEncryptionFunction(String input) {
+        // code to encrypt input and return the expected encrypted data
+    }
+
+    String myDecryptionFunction(String input) {
+        // code to decrypt input and return the expected decrypted data
+    }
+
+}
+```
+
+
+
 ## Annotation list
 - [Encryption/Encryption Annotation List](https://github.com/Licoy/encrypt-body-spring-boot-starter/wiki/加密注解一览表)
 - [Decryption Annotation List](https://github.com/Licoy/encrypt-body-spring-boot-starter/wiki/解密注解一览表)

@@ -18,6 +18,10 @@ public enum DecryptBodyMethod {
     /**
      * RAS
      */
-    RSA
+    RSA,
+    /**
+     * CUSTOM
+     */
+    CUSTOM
 
 }

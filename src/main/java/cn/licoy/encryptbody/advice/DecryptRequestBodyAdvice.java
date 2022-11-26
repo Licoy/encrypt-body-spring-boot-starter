@@ -7,6 +7,7 @@ import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.RSA;
 import cn.licoy.encryptbody.annotation.FieldBody;
 import cn.licoy.encryptbody.annotation.decrypt.AESDecryptBody;
+import cn.licoy.encryptbody.annotation.decrypt.CustomDecryptBody;
 import cn.licoy.encryptbody.annotation.decrypt.DESDecryptBody;
 import cn.licoy.encryptbody.annotation.decrypt.DecryptBody;
 import cn.licoy.encryptbody.annotation.decrypt.RSADecryptBody;
@@ -203,6 +204,14 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
                 return DecryptAnnotationInfoBean.builder().decryptBodyMethod(DecryptBodyMethod.RSA).key(decryptBody.key()).rsaKeyType(decryptBody.type()).build();
             }
         }
+
+        if (annotatedElement.isAnnotationPresent(CustomDecryptBody.class)) {
+            CustomDecryptBody decryptBody = annotatedElement.getAnnotation(CustomDecryptBody.class);
+            if (decryptBody != null) {
+                return DecryptAnnotationInfoBean.builder().decryptBodyMethod(DecryptBodyMethod.CUSTOM).providerClassName(decryptBody.providerClassName()).decryptMethodName(decryptBody.decryptMethodName()).build();
+            }
+        }
+
         return null;
     }
 
@@ -231,6 +240,15 @@ public class DecryptRequestBodyAdvice implements RequestBodyAdvice {
         if (method == DecryptBodyMethod.RSA) {
             RSA rsa = CommonUtils.infoBeanToRsaInstance(infoBean);
             return rsa.decryptStr(formatStringBody, infoBean.getRsaKeyType().toolType);
+        }
+        if (method == DecryptBodyMethod.CUSTOM) {
+            try {
+                Class<?> clazz = Class.forName(infoBean.getProviderClassName());
+                Method m = clazz.getMethod(infoBean.getDecryptMethodName(), String.class);
+                return m.invoke(null, formatStringBody).toString();
+            } catch( Exception e) {
+                return "failed to encrypt: " + formatStringBody;
+            }
         }
         throw new DecryptBodyFailException();
     }

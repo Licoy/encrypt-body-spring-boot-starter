@@ -13,10 +13,13 @@
     - - [x] AES
     - - [x] DES
     - - [x] RSA
+    - - [x] CUSTOM
+    
 - 可进行解密的方式有：
     - - [x] AES
     - - [x] DES
     - - [x] RSA
+    - - [x] CUSTOM
 ## 引入注册
 ### 导入依赖
 在项目的`pom.xml`中引入依赖：
@@ -116,6 +119,41 @@ public class User implements Serializable {
 
 }
 ```
+
+## 使用自定义加密/解密
+````java
+@Data
+@EncryptBody
+@FieldBody
+public class User implements Serializable {
+
+    @CustomDecryptBody(providerClassName = "com.myorg.mypkg.MyCryptoProvider", decryptMethodName = "myDecryptionFunction")
+    private String name;
+
+    @CustomEncryptBody(providerClassName = "com.myorg.mypkg.MyCryptoProvider", encryptMethodName = "myEncryptionFunction")
+    private String numberValue;
+
+
+
+}
+````
+
+使用 myEncryptionFunction 实现 MyCryptoProvider 类，如下所示。
+```java
+package com.myorg.mypkg;
+
+public class MyCryptoProvider {
+    String myEncryptionFunction(String input) {
+        // 用于加密输入并返回预期加密数据的代码
+    }
+
+    String myDecryptionFunction(String input) {
+        // 解密输入并返回预期解密数据的代码
+    }
+
+}
+```
+
 ## 注解一览表
 - [编码/加密注解一览表](https://github.com/Licoy/encrypt-body-spring-boot-starter/wiki/加密注解一览表)
 - [解密注解一览表](https://github.com/Licoy/encrypt-body-spring-boot-starter/wiki/解密注解一览表)
