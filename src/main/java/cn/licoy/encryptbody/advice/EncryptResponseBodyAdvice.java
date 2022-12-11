@@ -226,15 +226,18 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         String key = infoBean.getKey();
         if (method == EncryptBodyMethod.DES) {
             key = CommonUtils.checkAndGetKey(config.getDesKey(), key, "DES-KEY");
-            return SecureUtil.des(key.getBytes()).encryptHex(formatStringBody);
+            return config.getEncryptEncodeType() == EncryptBodyConfig.EncryptEncodeType.BASE64 ?
+                    SecureUtil.des(key.getBytes()).encryptBase64(formatStringBody) : SecureUtil.des(key.getBytes()).encryptHex(formatStringBody);
         }
         if (method == EncryptBodyMethod.AES) {
             key = CommonUtils.checkAndGetKey(config.getAesKey(), key, "AES-KEY");
-            return SecureUtil.aes(key.getBytes()).encryptHex(formatStringBody);
+            return config.getEncryptEncodeType() == EncryptBodyConfig.EncryptEncodeType.BASE64 ?
+                    SecureUtil.aes(key.getBytes()).encryptBase64(formatStringBody) : SecureUtil.aes(key.getBytes()).encryptHex(formatStringBody);
         }
         if (method == EncryptBodyMethod.RSA) {
             RSA rsa = CommonUtils.infoBeanToRsaInstance(infoBean);
-            return rsa.encryptHex(formatStringBody, infoBean.getRsaKeyType().toolType);
+            return config.getEncryptEncodeType() == EncryptBodyConfig.EncryptEncodeType.BASE64 ?
+                    rsa.encryptBase64(formatStringBody, infoBean.getRsaKeyType().toolType) : rsa.encryptHex(formatStringBody, infoBean.getRsaKeyType().toolType);
         }
         throw new EncryptBodyFailException();
     }
