@@ -1,7 +1,9 @@
 package cn.licoy.encryptbody.config;
 
+import cn.licoy.encryptbody.advice.EncryptResponseBodyAdvice;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.context.annotation.Configuration;
 
 import java.nio.charset.Charset;
@@ -31,5 +33,17 @@ public class EncryptBodyConfig {
 
     private Charset encoding = StandardCharsets.UTF_8;
 
+    /**
+     * aes 或者 des 加密后使用编码处理密文(base64 或 hex, 防止特殊字符转码)
+     *
+     * @see EncryptResponseBodyAdvice#switchEncrypt(java.lang.String, cn.licoy.encryptbody.bean.EncryptAnnotationInfoBean)
+     */
+    @NestedConfigurationProperty
+    private EncryptEncodeType encryptEncodeType = EncryptEncodeType.HEX;
+
+    public enum EncryptEncodeType {
+        HEX,
+        BASE64
+    }
 
 }

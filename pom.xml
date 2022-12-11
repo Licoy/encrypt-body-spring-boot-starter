@@ -6,7 +6,7 @@
 
     <groupId>cn.licoy</groupId>
     <artifactId>encrypt-body-spring-boot-starter</artifactId>
-    <version>1.2.3</version>
+    <version>1.2.4-SNAPSHOT</version>
 
     <name>encrypt-body-spring-boot-starter</name>
     <description>encrypt-body-spring-boot-starter是SpringBoot控制器统一的响应体加密与请求体解密的注解处理方式，支持MD5/SHA/AES/DES/RSA</description>
